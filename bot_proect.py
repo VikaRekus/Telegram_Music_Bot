@@ -1,7 +1,16 @@
 import telebot
 from telebot import types
 
-bot = telebot.TeleBot('6250441055:AAHxwYcMT0l8oWquuYTyJiPQD35vJeTBz4w')
+bot = telebot.TeleBot('6077503747:AAG2VNsh3fXjhFrENc7gLze7mAJ7H5zibpA')
+
+@bot.message_handler(commands=['start'])
+def start(message):
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    btn1 = types.KeyboardButton("👋 Поздороваться")
+    btn2 = types.KeyboardButton("🎶 Найти музыку")
+    btn3 = types.KeyboardButton("❓ Задать вопрос")
+    markup.add(btn1, btn2, btn3)
+    bot.send_message(message.chat.id, text="Привет, {0.first_name}! Я помогу тебе найти нужную музыку".format(message.from_user), reply_markup=markup)
 
 @bot.message_handler(content_types=['text'])
 def inline_key(message):
@@ -13,6 +22,41 @@ def inline_key(message):
         key3 = types.InlineKeyboardButton(text='Кнопка 3', callback_data='key3')
         mainmenu.add(key1, key2, key3)
         bot.send_message(message.chat.id, 'Выбери стиль песни:', reply_markup=mainmenu)
+    elif message.text == "👋 Поздороваться":
+        bot.send_message(message.chat.id, text="Привееет. Рад вас видеть)")
+    elif message.text == "❓ Задать вопрос":
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        btn1 = types.KeyboardButton("Как тебя зовут?")
+        btn2 = types.KeyboardButton("Что ты можешь?")
+        back = types.KeyboardButton("Вернуться в главное меню")
+        markup.add(btn1, btn2, back)
+        bot.send_message(message.chat.id, text="Задай мне вопрос", reply_markup=markup)
+    elif message.text == "🎶 Найти музыку":
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        btn1 = types.KeyboardButton("Найти по названию")
+        btn2 = types.KeyboardButton("Сгенерировать любую")
+        back = types.KeyboardButton("Вернуться в главное меню")
+        markup.add(btn1, btn2, back)
+        bot.send_message(message.chat.id, text="Выбери действие", reply_markup=markup)
+
+    elif message.text == "Как тебя зовут?":
+        bot.send_message(message.chat.id, "У меня нет имени..")
+
+    elif message.text == "Что ты можешь?":
+        bot.send_message(message.chat.id, text="Поздороваться с пользователями")
+
+    #elif message.text == "Найти по названию":
+    #    bot.send_message(message.chat.id)
+
+    elif message.text == "Вернуться в главное меню":
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        button1 = types.KeyboardButton("👋 Поздороваться")
+        button2 = types.KeyboardButton("🎶 Найти музыку")
+        button3 = types.KeyboardButton("❓ Задать вопрос")
+        markup.add(button1, button2, button3)
+        bot.send_message(message.chat.id, text="Вы вернулись в главное меню", reply_markup=markup)
+    else:
+        bot.send_message(message.chat.id, text="На такую команду я не запрограммирован((....")
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_inline(call):
