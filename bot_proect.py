@@ -1,6 +1,9 @@
 import telebot
 from telebot import types
+from selenium import webdriver
+from time import sleep
 
+driver = webdriver.Chrome()
 bot = telebot.TeleBot('6077503747:AAG2VNsh3fXjhFrENc7gLze7mAJ7H5zibpA')
 
 @bot.message_handler(commands=['start'])
@@ -23,7 +26,7 @@ def inline_key(message):
         mainmenu.add(key1, key2, key3)
         bot.send_message(message.chat.id, 'Выбери стиль песни:', reply_markup=mainmenu)
     elif message.text == "👋 Поздороваться":
-        bot.send_message(message.chat.id, text="Привееет. Рад вас видеть)")
+        bot.send_message(message.chat.id, text="Привеееет. Рад вас видеть)")
     elif message.text == "❓ Задать вопрос":
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         btn1 = types.KeyboardButton("Как тебя зовут?")
@@ -40,13 +43,14 @@ def inline_key(message):
         bot.send_message(message.chat.id, text="Выбери действие", reply_markup=markup)
 
     elif message.text == "Как тебя зовут?":
-        bot.send_message(message.chat.id, "У меня нет имени..")
+        bot.send_message(message.chat.id, "У меня нет имени....")
 
     elif message.text == "Что ты можешь?":
-        bot.send_message(message.chat.id, text="Поздороваться с пользователями")
+        bot.send_message(message.chat.id, text="Могу найти вам определенную песню, а могу порекомендовать свою😜")
 
-    #elif message.text == "Найти по названию":
-    #    bot.send_message(message.chat.id)
+    elif message.text == "Найти по названию":
+        sm = bot.send_message(message.chat.id, "Введите название песни, которую хотите найти")
+        bot.register_next_step_handler(sm, search(message))
 
     elif message.text == "Вернуться в главное меню":
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -57,6 +61,16 @@ def inline_key(message):
         bot.send_message(message.chat.id, text="Вы вернулись в главное меню", reply_markup=markup)
     else:
         bot.send_message(message.chat.id, text="На такую команду я не запрограммирован((....")
+
+def search(message):
+    video_href = "https://www.youtube.com/results?search_query=" + message.text
+    driver.get(video_href)
+    sleep(2)
+    videos = driver.find_elements("video_title")
+    for i in range(len(videos)):
+        bot.send_message(message.chat.id, videos[i].get_attribute("href"))
+        if i == 1:
+            break
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_inline(call):
