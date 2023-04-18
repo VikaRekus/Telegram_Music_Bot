@@ -2,9 +2,10 @@ import telebot
 from telebot import types
 from selenium import webdriver
 from time import sleep
-
+from youtubesearchpython import VideosSearch
 driver = webdriver.Chrome()
 bot = telebot.TeleBot('6077503747:AAG2VNsh3fXjhFrENc7gLze7mAJ7H5zibpA')
+
 
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -14,6 +15,7 @@ def start(message):
     btn3 = types.KeyboardButton("❓ Задать вопрос")
     markup.add(btn1, btn2, btn3)
     bot.send_message(message.chat.id, text="Привет, {0.first_name}! Я помогу тебе найти нужную музыку".format(message.from_user), reply_markup=markup)
+
 
 @bot.message_handler(content_types=['text'])
 def inline_key(message):
@@ -50,7 +52,7 @@ def inline_key(message):
 
     elif message.text == "Найти по названию":
         sm = bot.send_message(message.chat.id, "Введите название песни, которую хотите найти")
-        bot.register_next_step_handler(sm, search(message))
+        bot.register_next_step_handler(sm, search)
 
     elif message.text == "Вернуться в главное меню":
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -62,15 +64,19 @@ def inline_key(message):
     else:
         bot.send_message(message.chat.id, text="На такую команду я не запрограммирован((....")
 
+
 def search(message):
-    video_href = "https://www.youtube.com/results?search_query=" + message.text
-    driver.get(video_href)
-    sleep(2)
-    videos = driver.find_elements("video_title")
-    for i in range(len(videos)):
-        bot.send_message(message.chat.id, videos[i].get_attribute("href"))
+    # video_href = "https://www.youtube.com/results?search_query=" + message.text
+    # driver.get(video_href)
+    # sleep(2)
+    # videos = driver.find_elements(by="video-title")
+    result = VideosSearch(message.text, limit = 1).result()
+    for i in range(len(result["result"])):
+        #bot.send_message(message.chat.id, videos[i].get_attribute("href"))
+        bot.send_message(message.chat.id, result["result"][i]["link"])
         if i == 1:
             break
+
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_inline(call):
