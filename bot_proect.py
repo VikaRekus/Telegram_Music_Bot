@@ -1,12 +1,19 @@
+import re
+import os
+from moviepy.editor import *
 import telebot
 import sqlite3
 import random
 from telebot import types
-from selenium import webdriver
+#from selenium import webdriver
 import time
 from youtubesearchpython import VideosSearch
-driver = webdriver.Chrome()
+from pytube import YouTube
+import YouTubeMusicAPI
+
+#driver = webdriver.Chrome()
 bot = telebot.TeleBot('6077503747:AAG2VNsh3fXjhFrENc7gLze7mAJ7H5zibpA')
+
 
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -15,7 +22,9 @@ def start(message):
     btn2 = types.KeyboardButton("🎶 Найти музыку")
     btn3 = types.KeyboardButton("❓ Задать вопрос")
     markup.add(btn1, btn2, btn3)
-    bot.send_message(message.chat.id, text="Привет, {0.first_name}! Я помогу тебе найти нужную музыку".format(message.from_user), reply_markup=markup)
+    bot.send_message(message.chat.id,
+                     text="Привет, {0.first_name}! Я помогу тебе найти нужную музыку".format(message.from_user),
+                     reply_markup=markup)
 
 
 @bot.message_handler(content_types=['text'])
@@ -59,7 +68,7 @@ def inline_key(message):
         cursor.execute(sqlite_select_query)
         records = cursor.fetchall()
         row = random.choice(records)
-        bot.send_message(message.chat.id, row[1])
+        downloading(row[1], message)
 
 
     elif message.text == "Вернуться в главное меню":
@@ -74,22 +83,31 @@ def inline_key(message):
 
 
 def search(message):
+    bot.send_message(message.chat.id, "Ищем и скачиваем, подождите немного...")
+    #result = YouTubeMusicAPI.search(message.text)
+    #bot.send_message(message.chat.id, result["url"])
+    #downloading(result["url"])
     # video_href = "https://www.youtube.com/results?search_query=" + message.text
     # driver.get(video_href)
     # sleep(2)
     # videos = driver.find_elements(by="video-title")
-    result = VideosSearch(message.text, limit = 1).result()
+    result = VideosSearch(message.text, limit=1).result()
     for i in range(len(result["result"])):
-        downloding(result["result"][i]["link"])
-        #bot.send_message(message.chat.id, videos[i].get_attribute("href"))
-        #bot.send_message(message.chat.id, result["result"][i]["link"])
-        if i == 1:
-            break
-            
-def downloding(message):
-    my_video = YouTube(message)
-    my_video.streams.get_highest_resolution().download()
-    video = open(f'{my_video.title}.mp4', 'rb')
-    bot.send_video(message.chat.id, video)
+        downloading(result["result"][i]["link"], message)
+    #    # bot.send_message(message.chat.id, videos[i].get_attribute("href"))
+    #    # bot.send_message(message.chat.id, result["result"][i]["link"])
+    #    if i == 1:
+    #        break
+
+
+def downloading(link, message):
+    bot.send_message(message.chat.id, 'Скачиваем... '+link)
+
+    my_video = YouTube(link)
+    path = my_video.streams.filter(only_audio=True)[0].download()
+    video = open(path, 'rb')
+    print(path)
+    bot.send_audio(message.chat.id, video)
+
 
 bot.polling()
