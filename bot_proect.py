@@ -67,8 +67,15 @@ def inline_key(message):
         sqlite_select_query = """SELECT * from links"""
         cursor.execute(sqlite_select_query)
         records = cursor.fetchall()
-        row = random.choice(records)
-        downloading(row[1], message)
+        downloaded =False
+        while not downloaded:
+            try:
+                row = random.choice(records)
+                downloading(row[1], message)
+                downloaded = True
+            except:
+                print("Error", row[1])
+
 
 
     elif message.text == "Вернуться в главное меню":
