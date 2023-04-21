@@ -1,11 +1,12 @@
 import telebot
+import sqlite3
+import random
 from telebot import types
 from selenium import webdriver
-from time import sleep
+import time
 from youtubesearchpython import VideosSearch
 driver = webdriver.Chrome()
 bot = telebot.TeleBot('6077503747:AAG2VNsh3fXjhFrENc7gLze7mAJ7H5zibpA')
-
 
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -21,12 +22,6 @@ def start(message):
 def inline_key(message):
     if message.text == "/start":
         bot.send_message(message.from_user.id, 'Привет!))')
-        mainmenu = types.InlineKeyboardMarkup()
-        key1 = types.InlineKeyboardButton(text='Кнопка 1', callback_data='key1')
-        key2 = types.InlineKeyboardButton(text='Кнопка 2', callback_data='key2')
-        key3 = types.InlineKeyboardButton(text='Кнопка 3', callback_data='key3')
-        mainmenu.add(key1, key2, key3)
-        bot.send_message(message.chat.id, 'Выбери стиль песни:', reply_markup=mainmenu)
     elif message.text == "👋 Поздороваться":
         bot.send_message(message.chat.id, text="Привеееет. Рад вас видеть)")
     elif message.text == "❓ Задать вопрос":
@@ -39,7 +34,7 @@ def inline_key(message):
     elif message.text == "🎶 Найти музыку":
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         btn1 = types.KeyboardButton("Найти по названию")
-        btn2 = types.KeyboardButton("Сгенерировать любую")
+        btn2 = types.KeyboardButton("Песня на выбор бота")
         back = types.KeyboardButton("Вернуться в главное меню")
         markup.add(btn1, btn2, back)
         bot.send_message(message.chat.id, text="Выбери действие", reply_markup=markup)
@@ -53,6 +48,19 @@ def inline_key(message):
     elif message.text == "Найти по названию":
         sm = bot.send_message(message.chat.id, "Введите название песни, которую хотите найти")
         bot.register_next_step_handler(sm, search)
+
+    elif message.text == "Песня на выбор бота":
+        bot.send_message(message.chat.id, "Подождите немного...")
+        time.sleep(3)
+        sqlite_connection = sqlite3.connect('MyDB3.db')
+        cursor = sqlite_connection.cursor()
+
+        sqlite_select_query = """SELECT * from links"""
+        cursor.execute(sqlite_select_query)
+        records = cursor.fetchall()
+        row = random.choice(records)
+        bot.send_message(message.chat.id, row[1])
+
 
     elif message.text == "Вернуться в главное меню":
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -76,39 +84,5 @@ def search(message):
         bot.send_message(message.chat.id, result["result"][i]["link"])
         if i == 1:
             break
-
-
-@bot.callback_query_handler(func=lambda call: True)
-def callback_inline(call):
-    if call.data == "mainmenu":
-        mainmenu = types.InlineKeyboardMarkup()
-        key1 = types.InlineKeyboardButton(text='Кнопка 1', callback_data='key1')
-        key2 = types.InlineKeyboardButton(text='Кнопка 2', callback_data='key2')
-        key3 = types.InlineKeyboardButton(text='Кнопка 3', callback_data='key3')
-        mainmenu.add(key1, key2, key3)
-        bot.edit_message_text('Выбери стиль песни:', call.message.chat.id, call.message.message_id,
-                              reply_markup=mainmenu)
-    elif call.data == "key1":
-        next_menu = types.InlineKeyboardMarkup()
-        key4 = types.InlineKeyboardButton(text='Кнопка 4', callback_data='key4')
-        back = types.InlineKeyboardButton(text='Назад', callback_data='mainmenu')
-        next_menu.add(key4, back)
-        bot.edit_message_text('Это меню уровня 2, для кнопки1!', call.message.chat.id, call.message.message_id,
-                              reply_markup=next_menu)
-    elif call.data == "key2":
-        next_menu2 = types.InlineKeyboardMarkup()
-        key5 = types.InlineKeyboardButton(text='Кнопка 5', callback_data='key5')
-        back = types.InlineKeyboardButton(text='Назад', callback_data='mainmenu')
-        next_menu2.add(key5, back)
-        bot.edit_message_text('Это меню уровня 2, для кнопки2!', call.message.chat.id, call.message.message_id,
-                              reply_markup=next_menu2)
-
-    elif call.data == "key3":
-        next_menu2 = types.InlineKeyboardMarkup()
-        key6 = types.InlineKeyboardButton(text='Кнопка 6', callback_data='key6')
-        back = types.InlineKeyboardButton(text='Назад', callback_data='mainmenu')
-        next_menu2.add(key6, back)
-        bot.edit_message_text('Это меню уровня 2, для кнопки3!', call.message.chat.id, call.message.message_id,
-                              reply_markup=next_menu2)
 
 bot.polling()
