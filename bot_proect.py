@@ -9,7 +9,7 @@ from telebot import types
 import time
 from youtubesearchpython import VideosSearch
 from pytube import YouTube
-import YouTubeMusicAPI
+#import YouTubeMusicAPI
 
 #driver = webdriver.Chrome()
 bot = telebot.TeleBot('6077503747:AAG2VNsh3fXjhFrENc7gLze7mAJ7H5zibpA')
@@ -108,13 +108,16 @@ def search(message):
 
 
 def downloading(link, message):
-    bot.send_message(message.chat.id, 'Скачиваем... '+link)
+    try:
+        bot.send_message(message.chat.id, 'Скачиваем... '+link)
 
-    my_video = YouTube(link)
-    path = my_video.streams.filter(only_audio=True)[0].download()
-    video = open(path, 'rb')
-    print(path)
-    bot.send_audio(message.chat.id, video)
+        my_video = YouTube(link)
+        path = my_video.streams.filter(only_audio=True)[0].download()
+        video = open(path, 'rb')
+        print(path)
+        bot.send_audio(message.chat.id, video)
+    except:
+        bot.send_message(message.chat.id, 'Не получилось скачать...😢, попробуйте что-то другое')
 
 
 bot.polling()
