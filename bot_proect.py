@@ -80,9 +80,16 @@ def search(message):
     # videos = driver.find_elements(by="video-title")
     result = VideosSearch(message.text, limit = 1).result()
     for i in range(len(result["result"])):
+        downloding(result["result"][i]["link"])
         #bot.send_message(message.chat.id, videos[i].get_attribute("href"))
-        bot.send_message(message.chat.id, result["result"][i]["link"])
+        #bot.send_message(message.chat.id, result["result"][i]["link"])
         if i == 1:
             break
+            
+def downloding(message):
+    my_video = YouTube(message)
+    my_video.streams.get_highest_resolution().download()
+    video = open(f'{my_video.title}.mp4', 'rb')
+    bot.send_video(message.chat.id, video)
 
 bot.polling()
