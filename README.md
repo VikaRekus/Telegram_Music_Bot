@@ -3,13 +3,9 @@
 This bot can output you the music which it imports from Youtube
 
 Menu:
-
   /start
-  
   /help
-  
   /control
-  
   /error
 
 
