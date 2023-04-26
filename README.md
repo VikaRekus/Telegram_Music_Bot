@@ -1,5 +1,18 @@
 # Telegram_Music_Bot
 
+This bot can output you the music which it imports from Youtube
 
-Needful:
-https://github.com/iTteruya/youtube-to-mp3-telegram-bot/blob/0926a16ea727ebf426d91c3529ac5d52eedafb64/src/main.py
+Menu:
+  /start
+  /help
+  /control
+  /error
+
+Buttons:
+  "👋 Привет"
+  "🎶 Найти музыку":
+      "Найти по названию"
+      "Песня на выбор бота"
+  "❓ Задать вопрос"
+      "Как тебя зовут?"
+      "Что ты можешь?"
