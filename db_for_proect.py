@@ -66,7 +66,20 @@ lst = [("1", "https://www.youtube.com/watch?v=Cf2ASJCa_Iw&list=PL4fGSI1pDJn5C8dB
        ("61", "https://www.youtube.com/watch?v=bESGLojNYSo&list=PL4fGSI1pDJn5C8dBiYt0BTREyCHbZ47qc&index=61"),
        ("62", "https://www.youtube.com/watch?v=RuI96FlFU54&list=PL4fGSI1pDJn5C8dBiYt0BTREyCHbZ47qc&index=62"),
        ("63", "https://www.youtube.com/watch?v=VTsBdccXhFc&list=PL4fGSI1pDJn5C8dBiYt0BTREyCHbZ47qc&index=63"),
-       ("64", "https://www.youtube.com/watch?v=TmIwm5RElRs&list=PL4fGSI1pDJn5C8dBiYt0BTREyCHbZ47qc&index=64")]
+       ("64", "https://www.youtube.com/watch?v=TmIwm5RElRs&list=PL4fGSI1pDJn5C8dBiYt0BTREyCHbZ47qc&index=64"),
+       ("65", "https://www.youtube.com/watch?v=fsYcPZzcHVc&list=PLI_7Mg2Z_-4L9tKAmnh-Oc1FWFZ8DPoEL"),
+       ("66", "https://www.youtube.com/watch?v=ByVPVWCQVV8&list=PLI_7Mg2Z_-4L9tKAmnh-Oc1FWFZ8DPoEL&index=2"),
+       ("67", "https://www.youtube.com/watch?v=u6wOyMUs74I&list=PLI_7Mg2Z_-4L9tKAmnh-Oc1FWFZ8DPoEL&index=3"),
+       ("68", "https://www.youtube.com/watch?v=HEFic-jzJrI&list=PLI_7Mg2Z_-4L9tKAmnh-Oc1FWFZ8DPoEL&index=4"),
+       ("69", "https://www.youtube.com/watch?v=7N3W5eQIns0&list=PLI_7Mg2Z_-4L9tKAmnh-Oc1FWFZ8DPoEL&index=5"),
+       ("70", "https://www.youtube.com/watch?v=ugayI5KMqjs&list=PLI_7Mg2Z_-4L9tKAmnh-Oc1FWFZ8DPoEL&index=6"),
+       ("71", "https://www.youtube.com/watch?v=Nhx9QDuqpDM&list=PLI_7Mg2Z_-4L9tKAmnh-Oc1FWFZ8DPoEL&index=7"),
+       ("72", "https://www.youtube.com/watch?v=3lpzkwKRc48&list=PLI_7Mg2Z_-4L9tKAmnh-Oc1FWFZ8DPoEL&index=8"),
+       ("73", "https://www.youtube.com/watch?v=5Qe-U_8gT3Q&list=PLI_7Mg2Z_-4L9tKAmnh-Oc1FWFZ8DPoEL&index=9"),
+       ("74", "https://www.youtube.com/watch?v=AU5qWqQNnuA&list=PLI_7Mg2Z_-4L9tKAmnh-Oc1FWFZ8DPoEL&index=11"),
+       ("75", "https://www.youtube.com/watch?v=QLVBT7H0LF4&list=PLI_7Mg2Z_-4L9tKAmnh-Oc1FWFZ8DPoEL&index=12"),
+       ("76", "https://www.youtube.com/watch?v=c0Tie3O5TD0&list=PLI_7Mg2Z_-4L9tKAmnh-Oc1FWFZ8DPoEL&index=13"),
+       ("77", "https://www.youtube.com/watch?v=ElQ6WSpJ_Ro&list=PLI_7Mg2Z_-4L9tKAmnh-Oc1FWFZ8DPoEL&index=14")]
 
 cur.executemany("INSERT INTO links VALUES(?, ?);", lst)
 conn.commit()
